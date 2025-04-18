@@ -8,7 +8,7 @@ function Footer() {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Download Section */}
           <div className="space-y-6">
-            <h3 className="text-3xl font-bold text-green-700">
+            <h3 className="text-3xl font-bold text-[#0D986A]">
               Download our Plantify App
             </h3>
             <p className="text-gray-600">

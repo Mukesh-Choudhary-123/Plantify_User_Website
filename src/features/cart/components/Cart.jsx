@@ -62,51 +62,51 @@ function Cart() {
       image:
         "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810279/c1fuea1c20gw3p7z5jir.png",
     },
-    // {
-    //   id: 6,
-    //   title: "Aloe Vera",
-    //   price: 200,
-    //   quantity: 1,
-    //   subtitle: "Air Purifier",
-    //   image:
-    //     "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810277/sfqzlryj35d3qirkrmd9.png",
-    // },
-    // {
-    //   id: 7,
-    //   title: "Peace Lily",
-    //   price: 300,
-    //   quantity: 1,
-    //   subtitle: "Air Purifier",
-    //   image:
-    //     "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810275/vf6t8uxpsieqvmlk6vau.png",
-    // },
-    // {
-    //   id: 8,
-    //   title: "Spider Plant",
-    //   price: 220,
-    //   quantity: 1,
-    //   subtitle: "Air Purifier",
-    //   image:
-    //     "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810278/zcwyruubsttbphlcfwhr.png",
-    // },
-    // {
-    //   id: 9,
-    //   title: "Money Plant",
-    //   price: 180,
-    //   quantity: 1,
-    //   subtitle: "Indoor Plant",
-    //   image:
-    //     "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810278/y5ne7fz3zcucplxjjblu.png",
-    // },
-    // {
-    //   id: 10,
-    //   title: "Jade Plant",
-    //   price: 270,
-    //   quantity: 1,
-    //   subtitle: "Succulent",
-    //   image:
-    //     "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810279/c1fuea1c20gw3p7z5jir.png",
-    // },
+    {
+      id: 6,
+      title: "Aloe Vera",
+      price: 200,
+      quantity: 1,
+      subtitle: "Air Purifier",
+      image:
+        "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810277/sfqzlryj35d3qirkrmd9.png",
+    },
+    {
+      id: 7,
+      title: "Peace Lily",
+      price: 300,
+      quantity: 1,
+      subtitle: "Air Purifier",
+      image:
+        "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810275/vf6t8uxpsieqvmlk6vau.png",
+    },
+    {
+      id: 8,
+      title: "Spider Plant",
+      price: 220,
+      quantity: 1,
+      subtitle: "Air Purifier",
+      image:
+        "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810278/zcwyruubsttbphlcfwhr.png",
+    },
+    {
+      id: 9,
+      title: "Money Plant",
+      price: 180,
+      quantity: 1,
+      subtitle: "Indoor Plant",
+      image:
+        "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810278/y5ne7fz3zcucplxjjblu.png",
+    },
+    {
+      id: 10,
+      title: "Jade Plant",
+      price: 270,
+      quantity: 1,
+      subtitle: "Succulent",
+      image:
+        "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810279/c1fuea1c20gw3p7z5jir.png",
+    },
   ]);
 
   // Function to update quantity
@@ -132,14 +132,14 @@ function Cart() {
   };
 
   return (
-    <div className="space-y-3 mx-20">
+    <div className="space-y-3 mx-4 md:mx-20">
       {cartItems.map((item, index) => (
         <div
           key={item.id}
-          className="bg-[#9CE5CB] flex justify-between  h-24 px-10  relative overflow-hidden items-center rounded-2xl"
+          className="bg-[#9CE5CB]  flex flex-col md:flex-row justify-between h-auto md:h-24 px-4 md:px-10 py-4 md:py-0 relative overflow-hidden items-center rounded-2xl"
           style={{ backgroundColor: colors[index % colors.length] }}
         >
-          <img
+            <img
             src={vector1}
             className="absolute h-60 w-100 mt-10 -z-0"
             alt="Vector Background"
@@ -150,27 +150,27 @@ function Cart() {
             alt="Vector Background"
           />
 
-          {/* LEFT */}
-          <div className="flex flex-row items-center">
+          {/* LEFT Section */}
+          <div className="flex flex-row items-center w-full md:w-auto">
             <div>
               <img
                 src={item.image}
                 height={60}
                 width={60}
-                className="z-50 relative"
+                className="z-40 relative"
                 alt={item.title}
               />
             </div>
-            <div className="mt-3 z-50 flex flex-col ml-4">
-              <span className="text-2xl font-bold text-[#002140] tracking-wider font-[Philosopher]">
+            <div className="mt-3 z-40 flex flex-col ml-4">
+              <span className="text-xl md:text-2xl font-bold text-[#002140] tracking-wider font-[Philosopher]">
                 {item.title}
               </span>
               <span className="font-medium text-sm">{item.subtitle}</span>
             </div>
           </div>
 
-          {/* RIGHT */}
-          <div className="flex flex-row gap-5 items-center">
+          {/* RIGHT Section */}
+          <div className="flex flex-row gap-3 items-center mt-4 md:mt-0">
             <div
               onClick={() => updateQuantity(item.id, "decrease")}
               className="bg-[#0D986A] h-10 w-10 rounded-xl flex justify-center items-center cursor-pointer"
@@ -200,10 +200,7 @@ function Cart() {
           </div>
         </div>
       ))}
-      <button
-        className="bg-[#0D986A] mt-4 hover:cursor-pointer"
-        style={{ width: "100%", padding: 10, borderRadius: 20 }}
-      >
+      <button className="bg-[#0D986A] mt-4 hover:cursor-pointer w-full py-3 rounded-full">
         <span className="text-white text-center font-bold">Checkout</span>
       </button>
     </div>

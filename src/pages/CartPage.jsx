@@ -5,11 +5,10 @@ import Navbar from "../ui/Navbar";
 function CartPage() {
   return (
     <>
-          <Navbar hide={false} />
-          <div className="my-5">
-              
-      <Cart />
-          </div>
+      <Navbar hide={false} />
+      <div className="my-5">
+        <Cart />
+      </div>
     </>
   );
 }

@@ -8,14 +8,14 @@ function ProductDetailPage() {
     <>
       <Navbar hide={false} />
       <ProductDetail />
-      <div>
+      {/* <div>
         <h4 className="text-2xl mt-5 text-center font-bold  text-[#002140] tracking-wide">
           Similar Plant
         </h4>
         <div className="mb-9">
           <SimilarProductList />
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

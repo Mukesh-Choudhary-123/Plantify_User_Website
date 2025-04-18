@@ -11,280 +11,215 @@ import globeIcon from "../../../assets/image/globe.png";
 import tempIcon from "../../../assets/image/thermometer.png";
 import humidityIcon from "../../../assets/image/humidity.png";
 import tagIcon from "../../../assets/image/tagIcon.png";
+import { useProductDetailsQuery } from "../api/productApi";
+import SimilarProductList from "./SimilarProductList";
 
 function ProductDetail() {
-  const location = useLocation();
   const { id } = useParams();
-  const { color = "#fff" } = location.state || {};
+  const { state } = useLocation();
+  const bgColor = state?.color || "#fff";
 
-  const [show, setShow] = useState(false);
+  const { data: response = {}, isLoading, error } = useProductDetailsQuery(id);
+  const product = response.product ?? response;
+  const careInstructionsArray = Object.entries(product.careInstructions || []);
 
-  const product = {
-    id: 3729819873984234,
-    title: "Aloe Vera",
-    prices: 200,
-    subtitle: "Air Purifier", // You might update this if needed
-    overview: {
-      water: 250, // Recommended water in ml per week (for example)
-      light: 34, // Light exposure level (arbitrary unit or percentage)
-      fertilizer: 250, // Fertilizer dosage (in grams, etc.)
-    },
-    category: "Indoor",
-    plantBio:
-      "No green thumb required to keep our artificial watermelon peperomia plant looking lively and lush anywhere you place it.",
-    image:
-      "https://res.cloudinary.com/dyws4bybf/image/upload/c_thumb,w_200,g_face/v1740810277/sfqzlryj35d3qirkrmd9.png",
-    // Additional Fields:
-    scientificName: "Aloe barbadensis miller",
-    commonName: "Aloe Vera",
-    origin: "North Africa",
-    careInstructions: {
-      watering:
-        "Water every 3 weeks, allowing the soil to dry out completely between waterings.",
-      sunlight: "Bright, indirect sunlight is ideal.",
-      fertilizer:
-        "Feed with a balanced fertilizer diluted to half strength during the growing season.",
-      soil: "Well-draining cactus or succulent mix.",
-    },
-    growthRate: "Moderate",
-    dimensions: {
-      height: "12-24 inches",
-      spread: "12-24 inches",
-    },
-    maintenance:
-      "Low maintenance. Prune dead leaves and repot every 2-3 years.",
-    idealTemperature: "28°C - 35°C",
-    humidity: "Low to moderate humidity",
-    toxicity: "Non-toxic to pets",
-    rating: 4.5,
-    reviews: 120,
-  };
-  const careInstructionsArray = Object.entries(product.careInstructions);
-
-  // Store the active (expanded) section key
   const [activeSection, setActiveSection] = useState(null);
 
-  // Toggle the active section.
-  const handleToggle = (key) => {
-    if (activeSection === key) {
-      setActiveSection(null);
-    } else {
-      setActiveSection(key);
-    }
-  };
+  console.log("product :-", product);
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [id ]);
+  }, [id]);
 
   return (
     <>
-      <div className="flex flex-row ">
-        {/* LEFT */}
-        <div className="mx-10" style={{ width: "30%", height: "60%" }}>
-          <div
-            className=" my-5 flex flex-col justify-center  rounded-xl "
-            style={{ backgroundColor: color, width: "100%", height: "100%" }}
-          >
-            {/* Image container */}
-            <div
-              className="max-h-80    flex justify-center overflow-hidden relative rounded-xl"
-              style={{ backgroundColor: color }}
-            >
-              <img
-                src={vector1}
-                className="absolute h-60 w-100 mt-10 "
-                alt="Vector Background"
-              />
-              <img
-                src={vector2}
-                className="absolute h-40 w-130 "
-                alt="Vector Background"
-              />
-              <img src={product.image} className="h-72 relative z-20 flex " />
-            </div>
-            {/* Text container */}
-            <div className="flex flex-col py-3 px-5 text-center gap-4 justify-center ">
-              <div className="flex flex-row gap-2" style={{alignSelf:"center"}}>
-              <span className="font-semibold  text-[#002140]">
-                {product.subtitle}
-                </span>
-                <img src={tagIcon} height={20} width={20}/>
-              </div>
-              <span className="text-4xl font-bold  text-[#002140] tracking-wider font-[Philosopher]">
-                {product.title}
-              </span>
-              <span className="text-1xl font-medium mb-5">
-                <span className="text-1xl font-bold text-gray-500">Price </span>
-                ₹{product.prices}/- Rs.
-              </span>
-            </div>
-          </div>
-          <button
-            className="bg-[#0D986A]"
-            style={{ width: "100%", padding: 10, borderRadius: 20 }}
-          >
-            {" "}
-            <span className="text-white font-bold">Add to Cart</span>{" "}
-          </button>
+      {/* Loading & Error */}
+      {isLoading && (
+        <div className="py-20 text-center">Loading product details…</div>
+      )}
+      {error && (
+        <div className="py-20 text-center text-red-500">
+          Error loading product.
         </div>
+      )}
 
-        {/* RIGHT */}
-        <div className="mx-10 my-5">
-          {/* Overview Section */}
-          <div>
-            <h4 className="text-1xl font-bold  text-[#002140] tracking-wide">
-              Overwive
-            </h4>
-            <div className="flex flex-row gap-10 mt-3">
-              {/* first */}
-              <div className="flex gap-3">
-                <img
-                  src={waterIcon}
-                  width={20}
-                  style={{ height: 30, marginTop: 8 }}
-                />
-                <div className="flex flex-col">
-                  <span className="text-gray-500 font-extrabold">WATER</span>
-                  <span className="text-[#0D986A] font-extrabold">
-                    {product.overview.water}ml
-                  </span>
+      {/* Main Content */}
+      {!isLoading && !error && (
+        <>
+          <div className="flex flex-col md:flex-row px-4 md:px-10 py-5 gap-5">
+            {/* LEFT: Image & Add to Cart */}
+            <div className="md:w-1/3 mb-5 md:mb-0">
+              <div
+                className="mx-auto md:mx-10 my-5 flex flex-col justify-center rounded-xl"
+                style={{ backgroundColor: bgColor, width: "100%" }}
+              >
+                <div
+                  className="relative flex justify-center overflow-hidden rounded-xl max-h-80"
+                  style={{ backgroundColor: bgColor }}
+                >
+                  <img
+                    src={vector1}
+                    className="absolute h-60 w-full mt-10"
+                    alt="Vector Background"
+                  />
+                  <img
+                    src={vector2}
+                    className="absolute h-40 w-full"
+                    alt="Vector Background"
+                  />
+                  <img
+                    src={product.thumbnail || product.image}
+                    className="relative z-20 h-72 object-contain"
+                    alt={product.title}
+                  />
                 </div>
-              </div>
-              {/* secong */}
-              <div className="flex gap-3">
-                <img
-                  src={lightIcon}
-                  width={45}
-                  style={{ height: 35, marginTop: 5 }}
-                />
-                <div className="flex flex-col">
-                  <span className="text-gray-500 font-extrabold">LIGHT</span>
-                  <span className="text-[#0D986A] font-extrabold">
-                    {product.overview.light}%
-                  </span>
-                </div>
-              </div>
-              {/* third */}
-              <div className="flex gap-3">
-                <img
-                  src={fertilizerIcon}
-                  width={35}
-                  style={{ height: 30, marginTop: 9 }}
-                />
-                <div className="flex flex-col">
-                  <span className="text-gray-500 font-extrabold">
-                    FERTILIZER
-                  </span>
-                  <span className="text-[#0D986A] font-extrabold">
-                    {product.overview.fertilizer}gm
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Plant Bio Section */}
-          <div className="mt-5">
-            <h4 className="text-1xl font-bold  text-[#002140] tracking-wide">
-              Plant Bio
-            </h4>
-            <p className="mt-3 font-medium w-[70%]">{product.plantBio}</p>
-          </div>
-
-          {/* Care Instruction */}
-          <div className="mt-5">
-            <h4 className="text-1xl font-bold text-[#002140] tracking-wide">
-              Care Instruction
-            </h4>
-
-            <div>
-              {careInstructionsArray.map(([key, value]) => (
-                <div key={key}>
-                  <div
-                    onClick={() => handleToggle(key)}
-                    className="flex mt-3.5 flex-row hover:cursor-pointer"
-                  >
-                    {activeSection === key ? (
-                      <img
-                        src={upArrow}
-                        width={20}
-                        style={{ marginRight: 10, height: 20, marginTop: 2 }}
-                        alt="Collapse"
-                      />
-                    ) : (
-                      <img
-                        src={downArrow}
-                        width={25}
-                        style={{ marginRight: 5 }}
-                        alt="Expand"
-                      />
-                    )}
-                    <p className="font-semibold">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </p>
+                <div className="flex flex-col py-3 px-5 text-center gap-4 justify-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="font-semibold text-[#002140]">
+                      {product.subtitle}
+                    </span>
+                    <img src={tagIcon} height={20} width={20} alt="Tag" />
                   </div>
-                  {activeSection === key && (
-                    <p className="ml-7 font-medium w-[70%] mt-1">{value}</p>
-                  )}
-                  <hr className="w-[70%] mt-2 border-gray-400 " />
+                  <span className="text-4xl font-bold text-[#002140] tracking-wider font-[Philosopher]">
+                    {product.title}
+                  </span>
+                  <span className="text-lg font-medium">
+                    <span className="font-bold text-gray-500">Price: </span>₹
+                    {product.price || product.prices}/-
+                  </span>
                 </div>
-              ))}
+              </div>
+              <button className="bg-[#0D986A] w-full px-4 py-2 rounded-full mx-auto md:mx-10">
+                <span className="text-white font-bold">Add to Cart</span>
+              </button>
             </div>
-          </div>
-          <div className="mt-10">
-            <div className="flex gap-3">
-              <div className="flex bg-gray-100 gap-4 w-fit p-5 rounded-xl">
-                <img
-                  src={globeIcon}
-                  width={20}
-                  style={{ height: 20, alignSelf: "center" }}
-                />
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-600">Orgin</span>
-                  <span className="font-bold">{product.origin}</span>
+
+            {/* RIGHT: Details */}
+            <div className="md:w-2/3 mx-auto md:mx-10">
+              {/* Overview */}
+              <h4 className="text-xl font-bold text-[#002140] tracking-wide">
+                Overview
+              </h4>
+              <div className="flex flex-col sm:flex-row gap-10 mt-3">
+                {[
+                  {
+                    icon: waterIcon,
+                    label: "WATER",
+                    value: product.overview?.water,
+                    unit: "ml",
+                  },
+                  {
+                    icon: lightIcon,
+                    label: "LIGHT",
+                    value: product.overview?.light,
+                    unit: "%",
+                  },
+                  {
+                    icon: fertilizerIcon,
+                    label: "FERTILIZER",
+                    value: product.overview?.fertilizer,
+                    unit: "gm",
+                  },
+                ].map(({ icon, label, value, unit }) => (
+                  <div key={label} className="flex items-center gap-3">
+                    <img src={icon} className="h-8" alt={`${label} Icon`} />
+                    <div className="flex flex-col">
+                      <span className="text-gray-500 font-extrabold">
+                        {label}
+                      </span>
+                      <span className="text-[#0D986A] font-extrabold">
+                        {value}
+                        {unit}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Plant Bio */}
+              <div className="mt-5">
+                <h4 className="text-xl font-bold text-[#002140] tracking-wide">
+                  Plant Bio
+                </h4>
+                <p className="mt-3 font-medium w-full md:w-3/4">
+                  {product.plantBio || product.description}
+                </p>
+              </div>
+
+              {/* Care Instructions */}
+              <div className="mt-5">
+                <h4 className="text-xl font-bold text-[#002140] tracking-wide">
+                  Care Instructions
+                </h4>
+                <div>
+                  {careInstructionsArray.map(([key, value]) => (
+                    <div key={key} className="mb-3">
+                      <div
+                        onClick={() =>
+                          setActiveSection(activeSection === key ? null : key)
+                        }
+                        className="flex items-center cursor-pointer hover:opacity-80"
+                      >
+                        <img
+                          src={activeSection === key ? upArrow : downArrow}
+                          className="h-5 mr-2"
+                          alt={activeSection === key ? "Collapse" : "Expand"}
+                        />
+                        <p className="font-semibold">
+                          {key.charAt(0).toUpperCase() + key.slice(1)}
+                        </p>
+                      </div>
+                      {activeSection === key && (
+                        <p className="ml-7 font-medium w-full md:w-3/4 mt-1">
+                          {value}
+                        </p>
+                      )}
+                      <hr className="w-full md:w-3/4 mt-2 border-gray-400" />
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="flex bg-gray-100 gap-4 w-fit p-5 rounded-xl">
-                <img
-                  src={tempIcon}
-                  width={20}
-                  style={{ height: 20, alignSelf: "center" }}
-                />
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-600">Tempeature</span>
-                  <span className="font-bold">{product.idealTemperature}</span>
-                </div>
-              </div>
-            </div>
-            <div className="flex gap-3 mt-5">
-              <div className="flex bg-gray-100 gap-4 w-fit p-5 rounded-xl">
-                <img
-                  src={humidityIcon}
-                  width={20}
-                  style={{ height: 20, alignSelf: "center" }}
-                />
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-600">Humidity</span>
-                  <span className="font-bold">{product.humidity}</span>
-                </div>
-              </div>
-
-              <div className="flex bg-gray-100 gap-4 w-fit p-5 rounded-xl">
-                <img
-                  src={tagIcon}
-                  width={20}
-                  style={{ height: 20, alignSelf: "center" }}
-                />
-                <div className="flex flex-col">
-                  <span className="font-medium text-gray-600">Toxcity</span>
-                  <span className="font-bold">{product.toxicity}</span>
-                </div>
+              {/* Additional Info */}
+              <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {[
+                  { icon: globeIcon, label: "Origin", value: product.origin },
+                  {
+                    icon: tempIcon,
+                    label: "Temperature",
+                    value: product.idealTemperature,
+                  },
+                  {
+                    icon: humidityIcon,
+                    label: "Humidity",
+                    value: product.humidity,
+                  },
+                  { icon: tagIcon, label: "Toxicity", value: product.toxicity },
+                ].map(({ icon, label, value }) => (
+                  <div
+                    key={label}
+                    className="flex items-center bg-gray-100 gap-4 px-5 py-3 rounded-xl"
+                  >
+                    <img src={icon} className="h-5" alt={`${label} Icon`} />
+                    <div className="flex flex-col">
+                      <span className="font-medium text-gray-600">{label}</span>
+                      <span className="font-bold">{value}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      
+          <div>
+            <h4 className="text-2xl mt-5 text-center font-bold  text-[#002140] tracking-wide">
+              Similar Plant
+            </h4>
+            <div className="mb-9">
+              <SimilarProductList category={product?.category} />
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
